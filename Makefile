@@ -54,14 +54,17 @@ ifeq ($(findstring $(TARGET),$(SUPPORTED_TARGETS)),)
 all:
 	@echo "Invalid TARGET variable ; valid values are: $(SUPPORTED_TARGETS)" && exit 1
 else
-all: clean-build $(TARGETS) zip-all legal-info
+all: prepare-sources clean-build $(TARGETS) zip-all legal-info
 endif
 
 .NOTPARALLEL: all
 
-.PHONY: all clean clean-build zip-all legal-info sysroot jtag-bootstrap
+.PHONY: all clean clean-build prepare-sources zip-all legal-info sysroot jtag-bootstrap
 .PHONY: dfu-$(TARGET) dfu-sf-uboot dfu-all dfu-ram uboot-test-ram
 .PHONY: git-update-all git-pull
+
+prepare-sources:
+	scripts/prepare_sources.sh
 
 TARGET_DTS_FILES:=$(foreach dts,$(TARGET_DTS_FILES),build/$(dts))
 

@@ -12,8 +12,9 @@ Firmware License : [![Many Licenses](https://img.shields.io/badge/license-LGPL2+
  sudo apt-get install git build-essential fakeroot libncurses5-dev libssl-dev ccache
  sudo apt-get install dfu-util u-boot-tools device-tree-compiler mtools
  sudo apt-get install bc python3 cpio zip unzip rsync file wget
- git clone --recursive https://github.com/analogdevicesinc/plutosdr-fw.git
+ git clone https://github.com/analogdevicesinc/plutosdr-fw.git
  cd plutosdr-fw
+ make prepare-sources
  export VIVADO_SETTINGS=/opt/Xilinx/2025.1/Vivado/settings64.sh
  make
 
@@ -30,7 +31,7 @@ This toolchain is used to build: Buildroot, Linux and u-boot
      | Submodule  | Comment |
      | ------------- | ------------- |
      | linux | ADI Linux kernel tree |
-     | u-boot | ADI u-boot tree |
+     | u-boot | ADI u-boot tree; its nested submodules are intentionally not initialized |
      | hdl | ADI HDL designs used to build the FPGA bitstream |
      | buildroot | Buildroot tree used to build the toolchain and root filesystem |
      | br2-external | Buildroot external tree with the ADI board files (board/adi/pluto) and defconfigs |
