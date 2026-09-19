@@ -26,6 +26,35 @@ this project uses the Buildroot external toolchain infrastructure with the Arm G
 
 This toolchain is used to build: Buildroot, Linux and u-boot
 
+* FPGA/XSA source
+
+The firmware image includes the Pluto FPGA bitstream. The build obtains
+`build/system_top.xsa` using the first applicable method below:
+
+1. If Vivado is available, the HDL project is built locally with the pinned
+     Vivado version and its XSA is copied into `build/`.
+2. If `XSA_FILE` is set, that existing XSA is copied into `build/`:
+
+     ```bash
+     make XSA_FILE=/absolute/path/to/system_top.xsa
+     ```
+
+3. Otherwise, the XSA is downloaded from the release URL defined by
+     `XSA_URL`.
+
+An existing `build/system_top.xsa` is reused by Make, so its timestamp or
+provenance may predate the current source checkout. To force a fresh choice,
+remove the cached artifacts first:
+
+```bash
+rm -f build/system_top.xsa build/system_top.bit
+make
+```
+
+The source-preparation step does not generate or modify the XSA. It only
+initializes the required source repositories without recursively entering the
+u-boot tree.
+
 * Repository layout
 
      | Submodule  | Comment |
