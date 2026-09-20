@@ -16,9 +16,28 @@ Firmware License : [![Many Licenses](https://img.shields.io/badge/license-LGPL2+
  cd plutosdr-fw
  make prepare-sources
  export VIVADO_SETTINGS=/opt/Xilinx/2025.1/Vivado/settings64.sh
- make
+ make SKIP_LEGAL=1
 
 ```
+
+`SKIP_LEGAL=1` is the recommended default. It skips the legal-info tarball and the
+CycloneDX SBOM generation, which are release-packaging metadata and play no part in
+the firmware image. Drop it when producing a release.
+
+The SBOM step requires **Python 3.9 or newer** on the build host: `buildroot/utils/generate-cyclonedx`
+annotates with builtin generics (`-> list[str]`) and has no `from __future__ import annotations`,
+so on Python 3.8 and older it aborts with:
+
+```
+TypeError: 'type' object is not subscriptable
+```
+
+This runs last, after the image is complete, so hitting it means `build/pluto.frm` and
+`build/pluto.dfu` are already built and usable.
+
+Note that `all` depends on `clean-build`, which does `rm -rf build/*`. Re-running `make`
+discards the previous `.frm`, `.dfu` and the cached `system_top.xsa`; copy anything you
+want to keep out of `build/` first.
 
 Due to incompatibility between the AMD/Xilinx GCC toolchain supplied with Vivado/Vitis and Buildroot,
 this project uses the Buildroot external toolchain infrastructure with the Arm GNU toolchain
